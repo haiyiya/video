@@ -1,0 +1,17 @@
+server:
+  port: 80
+
+#spring
+spring:
+  #freemarker配置
+  freemarker:
+    suffix: .html
+    content-type: text/html
+    charset: utf-8
+    settings:
+      #数字格式化方式，无分隔符 '0'或'#'
+      number_format: '0'
+
+#自定义上传路径
+path:
+  upload: D:\upload\

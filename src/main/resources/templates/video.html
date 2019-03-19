@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/demo1.css">
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+    <title>haiyiya</title>
+    <style>
+        body{
+            font-size: 14px;
+        }
+        .left{
+            position: absolute;
+            width:350px;
+            height: 100%;
+            z-index: 999;
+            left: 0;
+            top: 0;
+        }
+        .left-menu{
+            background-color: #eeeeeef2;
+            width: 300px;
+            height: 100%;
+            float: left;
+            overflow-y: auto;
+        }
+        .icon-show-menu{
+            position: absolute;
+            font-size: 30px;
+            margin: 10px 20px;
+            color: #666;
+            cursor: pointer;
+        }
+        .item-menu{
+            padding: 12px 15px;
+            clear: both;
+            color: #444;
+            cursor: pointer;
+        }
+        .item-menu:hover,.item-menu-selected{
+            background-color: #e88686;
+            color: #fff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <script type="text/javascript" src="/static/ckplayer/ckplayer/ckplayer.js"></script>
+    <div id="video" style="width:1280px;height:720px;margin:auto;margin-top: 80px;"></div>
+    <div class="left">
+        <div id="menu" class="left-menu">
+            <#if paths??>
+                <#list paths as path>
+                    <div class="item-menu">${path}</div>
+                </#list>
+            </#if>
+        </div>
+        <i class="iconfont icon-show-menu show">&#xe795;</i>
+    </div>
+    <script type="text/javascript">
+        var videoObject = {
+            container: '#video',//“#”代表容器的ID，“.”或“”代表容器的class
+            variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
+            autoplay:true,
+            html5m3u8:true
+        };
+
+        if($('.item-menu').length > 0){
+            $($('.item-menu')[0]).addClass('item-menu-selected');
+            videoObject.video = '/upload/' + $($('.item-menu')[0]).html();
+            var player=new ckplayer(videoObject);
+        }
+
+        $('.item-menu').click(function(){
+            if(!$(this).hasClass('.item-menu-selected')){
+                $('.item-menu-selected').removeClass('item-menu-selected');
+                $(this).addClass('item-menu-selected');
+
+                videoObject.video = '/upload/' + $(this).html();
+                var player=new ckplayer(videoObject);
+            }
+
+            toggleLeft();
+        })
+
+        $('.icon-show-menu').click(function(){
+            toggleLeft();
+        })
+
+        function toggleLeft(){
+            var elem = $('.icon-show-menu');
+            if(elem.hasClass('show')){
+                elem.removeClass('show');
+                $(".left").animate({left:'-300px'});
+                $('.icon-show-menu').html('&#xe796;');//right
+            }else{
+                elem.addClass('show');
+                $(".left").animate({left:'0px'});
+                $('.icon-show-menu').html('&#xe795;');//left
+            }
+        }
+
+        function fitWindow(){
+            var windowHeight = $(window).height();
+            var videoHeight = $('#video').height();
+            $('#video').css('margin-top', windowHeight > videoHeight ? Math.floor((windowHeight - videoHeight) / 3) : 0);
+        }
+        fitWindow();
+
+        $(window).resize(function () {
+            fitWindow();
+        });
+    </script>
+</body>
+</html>
