@@ -46,7 +46,7 @@
             var title = $($('.item-menu')[0]).html();
             $('.title').html(title);
             videoObject.video = '/upload/' + title;
-            var player=new ckplayer(videoObject);
+            player=new ckplayer(videoObject);
         }
 
         $('.item-menu').click(function(){
@@ -57,9 +57,8 @@
                 $('.title').html($(this).html());
 
                 videoObject.video = '/upload/' + $(this).html();
-                var player=new ckplayer(videoObject);
+                player.newVideo(videoObject);
             }
-
             toggleLeft();
         })
 
