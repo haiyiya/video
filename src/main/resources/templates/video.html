@@ -4,49 +4,25 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/static/css/demo1.css">
     <script src="/static/js/jquery-3.3.1.min.js"></script>
+    <script src="/static/js/jquery.animate-colors-min.js"></script>
     <title>haiyiya</title>
     <style>
-        body{
-            font-size: 14px;
-        }
-        .left{
-            position: absolute;
-            width:350px;
-            height: 100%;
-            z-index: 999;
-            left: 0;
-            top: 0;
-        }
-        .left-menu{
-            background-color: #eeeeeef2;
-            width: 300px;
-            height: 100%;
-            float: left;
-            overflow-y: auto;
-        }
-        .icon-show-menu{
-            position: absolute;
-            font-size: 30px;
-            margin: 10px 20px;
-            color: #666;
-            cursor: pointer;
-        }
-        .item-menu{
-            padding: 12px 15px;
-            clear: both;
-            color: #444;
-            cursor: pointer;
-        }
-        .item-menu:hover,.item-menu-selected{
-            background-color: #e88686;
-            color: #fff;
-            font-weight: bold;
-        }
+        body{font-size:14px;}
+        .title{cursor:default;color:#666;font-size:24px;margin:10px 20px;}
+        .left{position:absolute;height:100%;z-index:999;left:0;top:0;}
+        .left-menu{background-color:#eeeeeef2;width:250px;height:100%;float:left;overflow-y:auto;}
+        .div-show_menu{width:70px;height:50px;line-height:50px;text-align:center;float:left;}
+        .icon-show-menu{font-size:30px;color:#fff;cursor:default;background-color:#e88686;padding:3px;border-radius:30px;}
+        .item-menu{padding:12px 15px;clear:both;color:#444;cursor:default;-webkit-transition:all 0.4s ease;-moz-transition:all 0.4s ease;-o-transition:all 0.4s ease;transition:all 0.4s ease;}
+        .item-menu:hover,.item-menu-selected{background-color:#e88686;color:#fff;font-weight:bold;-webkit-transition:all 0.4s ease;-moz-transition:all 0.4s ease;-o-transition:all 0.4s ease;transition:all 0.4s ease;}
     </style>
 </head>
 <body>
     <script type="text/javascript" src="/static/ckplayer/ckplayer/ckplayer.js"></script>
-    <div id="video" style="width:1280px;height:720px;margin:auto;margin-top: 80px;"></div>
+    <div style="width:1280px; margin:auto;">
+        <div class="title"></div>
+        <div id="video" style="width:1280px;height:720px;"></div>
+    </div>
     <div class="left">
         <div id="menu" class="left-menu">
             <#if paths??>
@@ -55,7 +31,7 @@
                 </#list>
             </#if>
         </div>
-        <i class="iconfont icon-show-menu show">&#xe795;</i>
+        <div class="div-show_menu"><i class="iconfont icon-show-menu show">&#xe681;</i></div>
     </div>
     <script type="text/javascript">
         var videoObject = {
@@ -67,7 +43,9 @@
 
         if($('.item-menu').length > 0){
             $($('.item-menu')[0]).addClass('item-menu-selected');
-            videoObject.video = '/upload/' + $($('.item-menu')[0]).html();
+            var title = $($('.item-menu')[0]).html();
+            $('.title').html(title);
+            videoObject.video = '/upload/' + title;
             var player=new ckplayer(videoObject);
         }
 
@@ -75,6 +53,8 @@
             if(!$(this).hasClass('.item-menu-selected')){
                 $('.item-menu-selected').removeClass('item-menu-selected');
                 $(this).addClass('item-menu-selected');
+
+                $('.title').html($(this).html());
 
                 videoObject.video = '/upload/' + $(this).html();
                 var player=new ckplayer(videoObject);
@@ -87,29 +67,28 @@
             toggleLeft();
         })
 
+        $(".icon-show-menu").mouseover(function(){
+            $(this).animate({fontSize:'36px'});
+        });
+
+        $(".icon-show-menu").mouseout(function(){
+            $(this).animate({fontSize:'26px'});
+        });
+
         function toggleLeft(){
             var elem = $('.icon-show-menu');
             if(elem.hasClass('show')){
                 elem.removeClass('show');
-                $(".left").animate({left:'-300px'});
-                $('.icon-show-menu').html('&#xe796;');//right
+                $(".left").animate({left:'-250px'});
+                $('.left-menu').animate({backgroundColor: 'transparent'});
+                $('.icon-show-menu').html('&#xe682;');//right
             }else{
                 elem.addClass('show');
                 $(".left").animate({left:'0px'});
-                $('.icon-show-menu').html('&#xe795;');//left
+                $('.left-menu').animate({backgroundColor: '#eeeeeef2'});
+                $('.icon-show-menu').html('&#xe681;');//left
             }
         }
-
-        function fitWindow(){
-            var windowHeight = $(window).height();
-            var videoHeight = $('#video').height();
-            $('#video').css('margin-top', windowHeight > videoHeight ? Math.floor((windowHeight - videoHeight) / 3) : 0);
-        }
-        fitWindow();
-
-        $(window).resize(function () {
-            fitWindow();
-        });
     </script>
 </body>
 </html>
