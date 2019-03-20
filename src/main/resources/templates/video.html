@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/demo1.css">
     <script src="/static/js/jquery-3.3.1.min.js"></script>
     <script src="/static/js/jquery.animate-colors-min.js"></script>
+    <script src="/static/layer-v3.1.1/layer/layer.js"></script>
     <title>haiyiya</title>
     <style>
         body{font-size:14px;}
@@ -12,7 +13,7 @@
         .left{position:absolute;height:100%;z-index:999;left:0;top:0;}
         .left-menu{background-color:#eeeeeef2;width:250px;height:100%;float:left;overflow-y:auto;}
         .div-show_menu{width:70px;height:50px;line-height:50px;text-align:center;float:left;}
-        .icon-show-menu{font-size:30px;color:#fff;cursor:default;background-color:#e88686;padding:3px;border-radius:30px;}
+        .icon-show-menu{font-size:26px;color:#fff;cursor:default;background-color:#e88686;padding:3px;border-radius:30px;}
         .item-menu{padding:12px 15px;clear:both;color:#444;cursor:default;-webkit-transition:all 0.4s ease;-moz-transition:all 0.4s ease;-o-transition:all 0.4s ease;transition:all 0.4s ease;}
         .item-menu:hover,.item-menu-selected{background-color:#e88686;color:#fff;font-weight:bold;-webkit-transition:all 0.4s ease;-moz-transition:all 0.4s ease;-o-transition:all 0.4s ease;transition:all 0.4s ease;}
     </style>
@@ -34,10 +35,13 @@
         <div class="div-show_menu"><i class="iconfont icon-show-menu show">&#xe681;</i></div>
     </div>
     <script type="text/javascript">
+
         var videoObject = {
             container: '#video',//“#”代表容器的ID，“.”或“”代表容器的class
             variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
             autoplay:true,
+            front: 'frontVideo',
+            next: 'nextVideo',
             html5m3u8:true
         };
 
@@ -54,10 +58,7 @@
                 $('.item-menu-selected').removeClass('item-menu-selected');
                 $(this).addClass('item-menu-selected');
 
-                $('.title').html($(this).html());
-
-                videoObject.video = '/upload/' + $(this).html();
-                player.newVideo(videoObject);
+                changeVideo($(this).html(), '/upload/' + $(this).html());
             }
             toggleLeft();
         })
@@ -74,18 +75,84 @@
             $(this).animate({fontSize:'26px'});
         });
 
-        function toggleLeft(){
+        $(document).on('click',':not(.left-menu,.icon-show-menu)',function(){
+            toggleLeft(false);
+        })
+
+        $('.left-menu,.icon-show-menu').click(function(event){
+            event.stopPropagation();
+        })
+
+        function toggleLeft(isOpen){
             var elem = $('.icon-show-menu');
-            if(elem.hasClass('show')){
+            if((isOpen === false && elem.hasClass('show')) || (typeof(isOpen) == 'undefined' && elem.hasClass('show'))){
                 elem.removeClass('show');
                 $(".left").animate({left:'-250px'});
                 $('.left-menu').animate({backgroundColor: 'transparent'});
                 $('.icon-show-menu').html('&#xe682;');//right
-            }else{
+                return;
+            }
+
+            if((isOpen === true && !elem.hasClass('show')) || (typeof(isOpen) == 'undefined' && !elem.hasClass('show'))){
                 elem.addClass('show');
                 $(".left").animate({left:'0px'});
                 $('.left-menu').animate({backgroundColor: '#eeeeeef2'});
                 $('.icon-show-menu').html('&#xe681;');//left
+                return;
+            }
+        }
+
+        function changeVideo(title, url){
+            $('.title').html(title);
+            
+            videoObject.video = url;
+
+            if(player.playerType == 'html5video') {
+                if(player.getFileExt(url) == '.flv' || player.getFileExt(url) == '.m3u8' || player.getFileExt(url) == '.f4v' || url.substr(0, 4) == 'rtmp') {
+                    player.removeChild();
+
+                    player = null;
+                    player = new ckplayer();
+                    player.embed(videoObject);
+                } else {
+                    player.newVideo(videoObject);
+                }
+            } else {
+                if(player.getFileExt(url) == '.mp4' || player.getFileExt(url) == '.webm' || player.getFileExt(url) == '.ogg') {
+                    player = null;
+                    player = new ckplayer();
+                    player.embed(videoObject);
+                } else {
+                    player.newVideo(videoObject);
+                }
+            }
+        }
+
+        function frontVideo(){
+            var currElem = $('.item-menu-selected');
+            var frontElem = currElem.prev();
+            if(frontElem.length > 0){
+                currElem.removeClass('item-menu-selected');
+                frontElem.addClass('item-menu-selected');
+                changeVideo(frontElem.html(), '/upload/' + frontElem.html())
+            }else{
+                layer.tips('已是第一个视频', '.icon-show-menu', {
+                    tips: [2, '#78BA32']
+                });
+            }
+        }
+
+        function nextVideo(){
+            var currElem = $('.item-menu-selected');
+            var nextElem = currElem.next();
+            if(nextElem.length > 0){
+                currElem.removeClass('item-menu-selected');
+                nextElem.addClass('item-menu-selected');
+                changeVideo(nextElem.html(), '/upload/' + nextElem.html())
+            }else{
+                layer.tips('已是最后一个视频', '.icon-show-menu', {
+                    tips: [2, '#78BA32']
+                });
             }
         }
     </script>
