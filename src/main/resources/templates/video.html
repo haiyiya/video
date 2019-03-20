@@ -12,7 +12,7 @@
         .title{cursor:default;color:#666;font-size:24px;margin:10px 20px;}
         .left{position:absolute;height:100%;z-index:999;left:0;top:0;}
         .left-menu{background-color:#eeeeeef2;width:250px;height:100%;float:left;overflow-y:auto;}
-        .div-show_menu{width:70px;height:50px;line-height:50px;text-align:center;float:left;}
+        .div-show-menu{width:70px;height:50px;line-height:50px;text-align:center;float:left;}
         .icon-show-menu{font-size:26px;color:#fff;cursor:default;background-color:#e88686;padding:3px;border-radius:30px;}
         .item-menu{padding:12px 15px;clear:both;color:#444;cursor:default;-webkit-transition:all 0.4s ease;-moz-transition:all 0.4s ease;-o-transition:all 0.4s ease;transition:all 0.4s ease;}
         .item-menu:hover,.item-menu-selected{background-color:#e88686;color:#fff;font-weight:bold;-webkit-transition:all 0.4s ease;-moz-transition:all 0.4s ease;-o-transition:all 0.4s ease;transition:all 0.4s ease;}
@@ -32,7 +32,7 @@
                 </#list>
             </#if>
         </div>
-        <div class="div-show_menu"><i class="iconfont icon-show-menu show">&#xe681;</i></div>
+        <div class="div-show-menu"><i class="iconfont icon-show-menu show">&#xe681;</i></div>
     </div>
     <script type="text/javascript">
 
@@ -69,13 +69,14 @@
 
         $(".icon-show-menu").mouseover(function(){
             $(this).animate({fontSize:'36px'});
+            toggleLeft(true);
         });
 
         $(".icon-show-menu").mouseout(function(){
             $(this).animate({fontSize:'26px'});
         });
 
-        $(document).on('click',':not(.left-menu,.icon-show-menu)',function(){
+        $(document).on('click',':not(.left-menu,.icon-show-menu,.div-show-menu)',function(){
             toggleLeft(false);
         })
 
