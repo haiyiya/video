@@ -40,6 +40,7 @@
             container: '#video',//“#”代表容器的ID，“.”或“”代表容器的class
             variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
             autoplay:true,
+            volume: 0.5,
             front: 'frontVideo',
             next: 'nextVideo',
             html5m3u8:true
@@ -51,6 +52,7 @@
             $('.title').html(title);
             videoObject.video = '/upload/' + title;
             player=new ckplayer(videoObject);
+            player.addListener('play', initHandler);
         }
 
         $('.item-menu').click(function(){
@@ -115,6 +117,7 @@
                     player = null;
                     player = new ckplayer();
                     player.embed(videoObject);
+                    player.addListener('play', initHandler);
                 } else {
                     player.newVideo(videoObject);
                 }
@@ -123,6 +126,7 @@
                     player = null;
                     player = new ckplayer();
                     player.embed(videoObject);
+                    player.addListener('play', initHandler);
                 } else {
                     player.newVideo(videoObject);
                 }
@@ -156,6 +160,22 @@
                 });
             }
         }
+
+        // 隐藏暂停图标和logo
+        function initHandler(){
+            var pauseClassName = $('div[class^="pausecenterch"]').attr('class');
+            var logoClassName = $('div[class^="logoch"]').attr('class');
+            var pauseStyle = '.' + pauseClassName + '{display: none !important;}';
+            var logoStyle = '.' + logoClassName + '{display: none !important;}'
+            var oStyle = $("style");
+            if(oStyle.html().indexOf(pauseStyle) == -1){
+                oStyle.append(pauseStyle);
+            }
+            if(oStyle.html().indexOf(logoStyle) == -1){
+                oStyle.append(logoStyle);
+            }
+        }
+
     </script>
 </body>
 </html>

@@ -1,8 +1,10 @@
 package com.lyml.video;
 
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
@@ -32,5 +34,11 @@ public class VideoController {
 
         modelAndView.setViewName("/video");
         return modelAndView;
+    }
+
+    @RequestMapping("/transform")
+    @ResponseBody
+    public Object transfrom() {
+        return new Gson().toJson(Common.transform(path));
     }
 }
